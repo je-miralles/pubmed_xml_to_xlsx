@@ -5,7 +5,38 @@
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
 
+## -------------------------------------------------------------#
+#
+# process article fields 
+#
+def process_article(field):
+    print('found Article')
+    for elemArticle in field:
+        print(elemArticle.tag)
+        if elemArticle.tag == 'ArticleTitle':
+            print('found ArticleTitle')
+            cell = 'D' + str(entry_index)
+            print('for cell ', cell)
+            print(elemArticle.text)
+            ws[cell] = elemArticle.text
+        if elemArticle.tag == 'Abstract':
+            print('found Abstract')
+            for elemAbstract in elemArticle:
+                if elemAbstract.tag == 'AbstractText':
+                    cell = 'E' + str(entry_index)
+                    print('for cell ', cell)
+                    print(elemAbstract.text)
+                    ws[cell] = elemAbstract.text
 
+def process_pmid(field):
+    print('found PMID')
+    cell = 'A' + str(entry_index)
+    ws[cell] = field.text
+
+
+## -------------------------------------------------------------#
+#
+# main program
 wb = PYXL.Workbook()
 
 # grab the active worksheet
@@ -33,27 +64,10 @@ for PubmedArticle in root:
             print('found MedlineCitation')
             for field in elemPubmedArticle:
                 if field.tag == 'PMID':
-                    print('found PMID')
-                    cell = 'A' + str(entry_index)
-                    ws[cell] = field.text
+                    process_pmid(field)
                 if field.tag == 'Article':
-                    print('found Article')
-                    for elemArticle in field:
-                        print(elemArticle.tag)
-                        if elemArticle.tag == 'ArticleTitle':
-                            print('found ArticleTitle')
-                            cell = 'D' + str(entry_index)
-                            print('for cell ', cell)
-                            print(elemArticle.text)
-                            ws[cell] = elemArticle.text
-                        if elemArticle.tag == 'Abstract':
-                            print('found Abstract')
-                            for elemAbstract in elemArticle:
-                                if elemAbstract.tag == 'AbstractText':
-                                    cell = 'E' + str(entry_index)
-                                    print('for cell ', cell)
-                                    print(elemAbstract.text)
-                                    ws[cell] = elemAbstract.text
+                    process_article(field)
+
 
 # Save the file
 wb.save("pubmed_result.xlsx")
