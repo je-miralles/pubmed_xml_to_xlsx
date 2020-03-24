@@ -5,6 +5,25 @@
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
 
+
+## -------------------------------------------------------------#
+#
+# initialize worksheet
+#
+def init_ws():
+    wb = PYXL.Workbook()
+
+    # grab the active worksheet
+    ws = wb.active
+
+    ws['A1'] = 'PMID'           # PMID
+    ws['B1'] = 'DOI'            # ELocationID
+    ws['C1'] = 'JournalTitle'   # Title
+    ws['D1'] = 'ArticleTitle'   # ArticleTitle
+    ws['E1'] = 'Abstract'       # AbstractText
+
+    return (wb, ws)
+
 ## -------------------------------------------------------------#
 #
 # process article fields 
@@ -28,6 +47,9 @@ def process_article(field):
                     print(elemAbstract.text)
                     ws[cell] = elemAbstract.text
 
+#
+# process pmid fields 
+#
 def process_pmid(field):
     print('found PMID')
     cell = 'A' + str(entry_index)
@@ -37,22 +59,13 @@ def process_pmid(field):
 ## -------------------------------------------------------------#
 #
 # main program
-wb = PYXL.Workbook()
-
-# grab the active worksheet
-ws = wb.active
+(wb, ws) = init_ws()
 
 #pathToXML = 'pubmed_result.xml'
 
 #tree = ET.parse(r'pathToXML')
 tree = ET.parse(r'pubmed_result.xml')
 root = tree.getroot()       # PubmedArticleSet
-
-ws['A1'] = 'PMID'           # PMID
-ws['B1'] = 'DOI'            # ELocationID
-ws['C1'] = 'JournalTitle'   # Title
-ws['D1'] = 'ArticleTitle'   # ArticleTitle
-ws['E1'] = 'Abstract'       # AbstractText
 
 entry_index = 1 # start populating after header
 
