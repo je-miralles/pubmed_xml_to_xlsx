@@ -4,7 +4,8 @@
 
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
-
+import argparse
+import sys
 
 ## -------------------------------------------------------------#
 #
@@ -25,6 +26,7 @@ def init_worksheet():
     return (wb, ws)
 
 ## -------------------------------------------------------------#
+
 #
 # process article fields 
 #
@@ -58,10 +60,18 @@ def process_pmid(PMIDField):
 #
 (wb, ws) = init_worksheet()
 
-#pathToXML = 'pubmed_result.xml'
+#parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
+#parser.add_argument('--sum', dest='accumulate', action='store_const',
+#                    const=sum, default=max,
+#                    help='sum the integers (default: find the max)')
 
-#tree = ET.parse(r'pathToXML')
-tree = ET.parse(r'pubmed_result.xml')
+#args = parser.parse_args()
+#print(args.accumulate(args.integers))
+
+pathToXML = sys.argv[1]
+pathToXLSX = sys.argv[2]
+
+tree = ET.parse(pathToXML)
 root = tree.getroot()       # PubmedArticleSet
 
 EntryIndex = 1 # start populating after header
@@ -80,4 +90,4 @@ for PubmedArticle in root:
 
 
 # Save the file
-wb.save("pubmed_result.xlsx")
+wb.save(pathToXLSX)
