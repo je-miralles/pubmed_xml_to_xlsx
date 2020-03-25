@@ -1,4 +1,4 @@
-# pubmed_abstracts_to_xml
+# pubmed_abstracts_to_xlsx
 #
 # Take the pubmed_result.txt file containing a dump of abstracts from a pubmed search and process the entries for excel
 
@@ -10,7 +10,7 @@ import openpyxl as PYXL
 #
 # initialize worksheet
 #
-def init_ws():
+def init_worksheet():
     wb = PYXL.Workbook()
 
     # grab the active worksheet
@@ -28,38 +28,35 @@ def init_ws():
 #
 # process article fields 
 #
-def process_article(field):
-    print('found Article')
-    for elemArticle in field:
-        print(elemArticle.tag)
-        if elemArticle.tag == 'ArticleTitle':
-            print('found ArticleTitle')
-            cell = 'D' + str(entry_index)
-            print('for cell ', cell)
-            print(elemArticle.text)
-            ws[cell] = elemArticle.text
-        if elemArticle.tag == 'Abstract':
-            print('found Abstract')
-            for elemAbstract in elemArticle:
+def process_article(Article):
+    #print('found Article')
+    for ArticleField in Article:
+        #print(ArticleField.tag)
+        if ArticleField.tag == 'ArticleTitle':
+            #print('found ArticleTitle')
+            Cell = 'D' + str(EntryIndex)
+            #print('for cell ', cell)
+            #print(ArticleField.text)
+            ws[Cell] = ArticleField.text
+        if ArticleField.tag == 'Abstract':
+            for elemAbstract in ArticleField:
                 if elemAbstract.tag == 'AbstractText':
-                    cell = 'E' + str(entry_index)
-                    print('for cell ', cell)
-                    print(elemAbstract.text)
-                    ws[cell] = elemAbstract.text
+                    Cell = 'E' + str(EntryIndex)
+                    ws[Cell] = elemAbstract.text
 
 #
 # process pmid fields 
 #
-def process_pmid(field):
-    print('found PMID')
-    cell = 'A' + str(entry_index)
-    ws[cell] = field.text
+def process_pmid(PMIDField):
+    Cell = 'A' + str(EntryIndex)
+    ws[Cell] = PMIDField.text
 
 
 ## -------------------------------------------------------------#
 #
 # main program
-(wb, ws) = init_ws()
+#
+(wb, ws) = init_worksheet()
 
 #pathToXML = 'pubmed_result.xml'
 
@@ -67,19 +64,19 @@ def process_pmid(field):
 tree = ET.parse(r'pubmed_result.xml')
 root = tree.getroot()       # PubmedArticleSet
 
-entry_index = 1 # start populating after header
+EntryIndex = 1 # start populating after header
 
 for PubmedArticle in root:
     print('found PubmedArticle')
-    entry_index = entry_index + 1
-    for elemPubmedArticle in PubmedArticle:
-        if elemPubmedArticle.tag == 'MedlineCitation':
+    EntryIndex = EntryIndex + 1
+    for PubmedArticleField in PubmedArticle:
+        if PubmedArticleField.tag == 'MedlineCitation':
             print('found MedlineCitation')
-            for field in elemPubmedArticle:
-                if field.tag == 'PMID':
-                    process_pmid(field)
-                if field.tag == 'Article':
-                    process_article(field)
+            for SubField in PubmedArticleField:
+                if SubField.tag == 'PMID':
+                    process_pmid(SubField)
+                if SubField.tag == 'Article':
+                    process_article(SubField)
 
 
 # Save the file
