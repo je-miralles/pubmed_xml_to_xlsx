@@ -5,7 +5,6 @@
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
 import argparse
-import sys
 
 ## -------------------------------------------------------------#
 #
@@ -61,8 +60,8 @@ def process_pmid(PMIDField):
 (wb, ws) = init_worksheet()
 
 parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
-parser.add_argument('infile', type=str, help='source PubMed Query xml')
-parser.add_argument('outfile', type=str, help='output xlsx file')
+parser.add_argument('infile', type=str, help='path to source PubMed Query xml')
+parser.add_argument('outfile', type=str, help='path to output xlsx file')
 
 args = parser.parse_args()
 
