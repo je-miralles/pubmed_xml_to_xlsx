@@ -1,0 +1,16 @@
+#! /user/bin/env python
+import argparse
+import pubmed_abstracts_to_xlsx
+
+parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
+parser.add_argument('infile', type=str, help='path to input PubMed Query xml')
+parser.add_argument('outfile', type=str, help='path to output xlsx file')
+#parser.add_argument('stylesheet', type=str, help='path to input xls stylesheet')
+
+args = parser.parse_args()
+
+pathToXML = args.infile
+pathToXLSX = args.outfile
+
+
+pubmed_abstracts_to_xlsx.pm_xml2xlsx(pathToXML, pathToXLSX)

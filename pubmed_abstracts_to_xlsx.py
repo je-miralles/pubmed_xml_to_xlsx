@@ -5,32 +5,32 @@
 
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
-import argparse
+
 
 ## -------------------------------------------------------------#
 #
 # initialize worksheet
 #
 def init_worksheet():
-    wb = PYXL.Workbook()
+    workbook = PYXL.Workbook()
 
     # grab the active worksheet
-    ws = wb.active
+    worksheet = workbook.active
 
-    ws['A1'] = 'PMID'           # PMID
-    ws['B1'] = 'DOI'            # ELocationID
-    ws['C1'] = 'JournalTitle'   # Title
-    ws['D1'] = 'ArticleTitle'   # ArticleTitle
-    ws['E1'] = 'Abstract'       # AbstractText
+    worksheet['A1'] = 'PMID'           # PMID
+    worksheet['B1'] = 'DOI'            # ELocationID
+    worksheet['C1'] = 'JournalTitle'   # Title
+    worksheet['D1'] = 'ArticleTitle'   # ArticleTitle
+    worksheet['E1'] = 'Abstract'       # AbstractText
 
-    return (wb, ws)
+    return (workbook, worksheet)
 
 ## -------------------------------------------------------------#
 
 #
 # process article fields 
 #
-def process_article(Article):
+def process_article(worksheet, Article, EntryIndex):
     #print('found Article')
     for ArticleField in Article:
         #print(ArticleField.tag)
@@ -39,54 +39,53 @@ def process_article(Article):
             Cell = 'D' + str(EntryIndex)
             #print('for cell ', cell)
             #print(ArticleField.text)
-            ws[Cell] = ArticleField.text
+            worksheet[Cell] = ArticleField.text
         if ArticleField.tag == 'Abstract':
             for elemAbstract in ArticleField:
                 if elemAbstract.tag == 'AbstractText':
                     Cell = 'E' + str(EntryIndex)
-                    ws[Cell] = elemAbstract.text
+                    worksheet[Cell] = elemAbstract.text
 
 #
 # process pmid fields 
 #
-def process_pmid(PMIDField):
+def process_pmid(worksheet, PMIDField, EntryIndex):
     Cell = 'A' + str(EntryIndex)
-    ws[Cell] = PMIDField.text
+    worksheet[Cell] = PMIDField.text
 
 
 ## -------------------------------------------------------------#
 #
 # main program
 #
-(wb, ws) = init_worksheet()
+def pm_xml2xlsx(infile, outfile):
+    (workbook, worksheet) = init_worksheet()
 
-parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
-parser.add_argument('infile', type=str, help='path to input PubMed Query xml')
-parser.add_argument('outfile', type=str, help='path to output xlsx file')
-#parser.add_argument('stylesheet', type=str, help='path to input xls stylesheet')
+    pathToXML = infile
+    pathToXLSX = outfile
 
-args = parser.parse_args()
+    tree = ET.parse(pathToXML)
+    root = tree.getroot()       # PubmedArticleSet
 
-pathToXML = args.infile
-pathToXLSX = args.outfile
+    EntryIndex = 1 # start populating after header
 
-tree = ET.parse(pathToXML)
-root = tree.getroot()       # PubmedArticleSet
-
-EntryIndex = 1 # start populating after header
-
-for PubmedArticle in root:
-    print('found PubmedArticle')
-    EntryIndex = EntryIndex + 1
-    for PubmedArticleField in PubmedArticle:
-        if PubmedArticleField.tag == 'MedlineCitation':
-            print('found MedlineCitation')
-            for SubField in PubmedArticleField:
-                if SubField.tag == 'PMID':
-                    process_pmid(SubField)
-                if SubField.tag == 'Article':
-                    process_article(SubField)
+    for PubmedArticle in root:
+        print('found PubmedArticle')
+        EntryIndex = EntryIndex + 1
+        for PubmedArticleField in PubmedArticle:
+            if PubmedArticleField.tag == 'MedlineCitation':
+                print('found MedlineCitation')
+                for SubField in PubmedArticleField:
+                    if SubField.tag == 'PMID':
+                        process_pmid(worksheet, SubField, EntryIndex)
+                    if SubField.tag == 'Article':
+                        process_article(worksheet, SubField, EntryIndex)
 
 
-# Save the file
-wb.save(pathToXLSX)
+    # Save the file
+    workbook.save(pathToXLSX)
+
+if __name__ == '__main__':
+    print('all good.')
+    # ...run automated tests...
+
