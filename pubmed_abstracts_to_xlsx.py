@@ -1,6 +1,7 @@
 # pubmed_abstracts_to_xlsx
 #
-# Take the pubmed_result.txt file containing a dump of abstracts from a pubmed search and process the entries for excel
+#  Take the pubmed_result.txt file containing a dump of abstracts from a pubmed
+# search and process the entries for excel
 
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
@@ -60,8 +61,9 @@ def process_pmid(PMIDField):
 (wb, ws) = init_worksheet()
 
 parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
-parser.add_argument('infile', type=str, help='path to source PubMed Query xml')
+parser.add_argument('infile', type=str, help='path to input PubMed Query xml')
 parser.add_argument('outfile', type=str, help='path to output xlsx file')
+#parser.add_argument('stylesheet', type=str, help='path to input xls stylesheet')
 
 args = parser.parse_args()
 
