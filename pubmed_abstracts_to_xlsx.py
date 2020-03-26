@@ -5,7 +5,9 @@
 
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 ## -------------------------------------------------------------#
 #
@@ -31,14 +33,14 @@ def init_worksheet():
 # process article fields 
 #
 def process_article(worksheet, Article, EntryIndex):
-    #print('found Article')
+    #logging.debug("found Article")
     for ArticleField in Article:
-        #print(ArticleField.tag)
+        #logging.debug(ArticleField.tag)
         if ArticleField.tag == 'ArticleTitle':
-            #print('found ArticleTitle')
+            #logging.debug("found ArticleTitle")
             Cell = 'D' + str(EntryIndex)
-            #print('for cell ', cell)
-            #print(ArticleField.text)
+            #logging.debug("for cell {}".format(cell))
+            #logging.debug(ArticleField.text)
             worksheet[Cell] = ArticleField.text
         if ArticleField.tag == 'Abstract':
             for elemAbstract in ArticleField:
@@ -70,11 +72,12 @@ def pm_xml2xlsx(infile, outfile):
     EntryIndex = 1 # start populating after header
 
     for PubmedArticle in root:
-        print('found PubmedArticle')
+        #logging.debug("found PubmedArticle: {} (${})".format(self.name, self.price))
+        logging.debug("found PubmedArticle")
         EntryIndex = EntryIndex + 1
         for PubmedArticleField in PubmedArticle:
             if PubmedArticleField.tag == 'MedlineCitation':
-                print('found MedlineCitation')
+                logging.debug('found MedlineCitation')
                 for SubField in PubmedArticleField:
                     if SubField.tag == 'PMID':
                         process_pmid(worksheet, SubField, EntryIndex)
@@ -86,6 +89,6 @@ def pm_xml2xlsx(infile, outfile):
     workbook.save(pathToXLSX)
 
 if __name__ == '__main__':
-    print('all good.')
+    logging.debug('all good.')
     # ...run automated tests...
 
