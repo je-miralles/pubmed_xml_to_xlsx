@@ -60,16 +60,14 @@ def process_pmid(PMIDField):
 #
 (wb, ws) = init_worksheet()
 
-#parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
-#parser.add_argument('--sum', dest='accumulate', action='store_const',
-#                    const=sum, default=max,
-#                    help='sum the integers (default: find the max)')
+parser = argparse.ArgumentParser(description='Convert PubMed Query XML to XLSX')
+parser.add_argument('infile', type=str, help='source PubMed Query xml')
+parser.add_argument('outfile', type=str, help='output xlsx file')
 
-#args = parser.parse_args()
-#print(args.accumulate(args.integers))
+args = parser.parse_args()
 
-pathToXML = sys.argv[1]
-pathToXLSX = sys.argv[2]
+pathToXML = args.infile
+pathToXLSX = args.outfile
 
 tree = ET.parse(pathToXML)
 root = tree.getroot()       # PubmedArticleSet
