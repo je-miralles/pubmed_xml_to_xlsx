@@ -7,8 +7,6 @@ import xml.etree.ElementTree as ET
 import openpyxl as PYXL
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-
 ## -------------------------------------------------------------#
 #
 # initialize worksheet
@@ -60,7 +58,10 @@ def process_pmid(worksheet, PMIDField, EntryIndex):
 #
 # main program
 #
-def pm_xml2xlsx(infile, outfile):
+def pm_xml2xlsx(infile, outfile, debug):
+    if debug == "DEBUG":
+        logging.basicConfig(level=logging.DEBUG)
+
     (workbook, worksheet) = init_worksheet()
 
     pathToXML = infile
