@@ -22,6 +22,7 @@ def init_worksheet():
     worksheet.column_dimensions['B'].width = 15
     worksheet.column_dimensions['C'].width = 70
     worksheet.column_dimensions['D'].width = 20
+    worksheet.column_dimensions['E'].width = 15
 
     worksheet['A1'] = 'ArticleTitle'   # ArticleTitle
     worksheet['B1'] = 'Author'         # Author
@@ -56,14 +57,19 @@ def process_article(worksheet, Article, EntryIndex):
                                                      vertical='top',
                                                      wrap_text=True,
                                                      shrink_to_fit=False)
-        worksheet[Cell] = "{}, {}, {} {} ".format(
-            Article.find('Journal').find('Title').text,
-            Article.find('Journal').find('JournalIssue').find('PubDate').find('Year').text,
-            Article.find('Journal').find('JournalIssue').find('PubDate').find('Month').text,
+        JournalString = Article.find('Journal').find('Title').text
+        JournalString = JournalString + ", {}".format(
+            Article.find('Journal').find('JournalIssue').find('Volume').text)
+        JournalString = JournalString + ", {}".format(
+            Article.find('Journal').find('JournalIssue').find('PubDate').find('Year').text)
+        JournalString = JournalString + ", {}".format(
+            Article.find('Journal').find('JournalIssue').find('PubDate').find('Month').text)
+        JournalString = JournalString + " {}".format(
             Article.find('Journal').find('JournalIssue').find('PubDate').find('Day').text)
     except AttributeError:
-        worksheet[Cell] = 'NA'
-        logging.debug('did not find Journal.Title') 
+        logging.debug('did not find Journal.Title or some subfields')
+
+    worksheet[Cell] = JournalString
 
     try:
         Cell = 'A' + str(EntryIndex)
