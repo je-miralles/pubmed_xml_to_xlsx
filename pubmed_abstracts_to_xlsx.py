@@ -73,6 +73,17 @@ def process_article(worksheet, Article, EntryIndex):
         logging.debug('did not find ArticleTitle')
 
     try:
+        Cell = 'B' + str(EntryIndex)
+        worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
+                                                   vertical='top',
+                                                   wrap_text=True,
+                                                   shrink_to_fit=False)
+        worksheet[Cell] = Article.find('AuthorList').find('Author').find('LastName').text
+    except AttributeError:
+        worksheet[Cell] = 'NA'
+        logging.debug('did not find ArticleTitle')
+
+    try:
         Cell = 'C' + str(EntryIndex)
         worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
                                                    vertical='top',
