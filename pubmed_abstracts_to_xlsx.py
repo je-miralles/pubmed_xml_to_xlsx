@@ -19,7 +19,7 @@ def init_worksheet():
     worksheet = workbook.active
     worksheet.page_setup.fitToHeight = 1
     worksheet.column_dimensions['A'].width = 50
-    worksheet.column_dimensions['B'].width = 10
+    worksheet.column_dimensions['B'].width = 15
     worksheet.column_dimensions['C'].width = 70
     worksheet.column_dimensions['D'].width = 20
 
@@ -82,7 +82,9 @@ def process_article(worksheet, Article, EntryIndex):
                                                      vertical='top',
                                                      wrap_text=True,
                                                      shrink_to_fit=False)
-        worksheet[Cell] = Article.find('AuthorList').find('Author').find('LastName').text
+        worksheet[Cell] = "{}, {}".format(
+            Article.find('AuthorList').find('Author').find('LastName').text,
+            Article.find('AuthorList').find('Author').find('Initials').text)
     except AttributeError:
         worksheet[Cell] = 'NA'
         logging.debug('did not find ArticleTitle')
