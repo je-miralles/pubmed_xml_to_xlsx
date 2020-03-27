@@ -41,25 +41,25 @@ def init_worksheet():
 # process article fields 
 #
 def process_article(worksheet, Article, EntryIndex):
-    #logging.debug("found Article")
-    for ArticleField in Article:
-        #logging.debug(ArticleField.tag)
-        if ArticleField.tag == 'ArticleTitle':
-            #logging.debug("found ArticleTitle")
-            Cell = 'D' + str(EntryIndex)
-            #logging.debug("for cell {}".format(cell))
-            #logging.debug(ArticleField.text)
-            worksheet[Cell] = ArticleField.text
-        if ArticleField.tag == 'Abstract':
-            for elemAbstract in ArticleField:
-                if elemAbstract.tag == 'AbstractText':
-                    Cell = 'E' + str(EntryIndex)
-                    worksheet[Cell] = elemAbstract.text
-        # if ArticleField.tag == 'Journal':
-        #     for elemJournal in ArticleField:
-        #         if elemAbstract.tag == 'AbstractText':
-        #             Cell = 'E' + str(EntryIndex)
-        #             worksheet[Cell] = elemAbstract.text
+    logging.debug('found Article')
+
+    try:
+        Cell = 'C' + str(EntryIndex)
+        worksheet[Cell] = Article.find('Journal').find('Title').text
+    except AttributeError:
+        logging.debug('did not find Journal.Title') 
+
+    try:
+        Cell = 'D' + str(EntryIndex)
+        worksheet[Cell] = Article.find('ArticleTitle').text
+    except AttributeError:
+        logging.debug('did not find ArticleTitle')
+
+    try:
+        Cell = 'E' + str(EntryIndex)
+        worksheet[Cell] = Article.find('Abstract').find('AbstractText').text
+    except AttributeError:
+        logging.debug('did not find AbstractText')
 
 #
 # process pmid fields 
@@ -68,6 +68,10 @@ def process_pmid(worksheet, PMIDField, EntryIndex):
     Cell = 'A' + str(EntryIndex)
     worksheet[Cell] = PMIDField.text
 
+#
+#logging.debug("found PubmedArticle: {} (${})".format(self.name, self.price))
+#logging.debug(ArticleField.tag)
+#
 
 ## -------------------------------------------------------------#
 #
@@ -88,18 +92,12 @@ def pm_xml2xlsx(infile, outfile, debug):
     EntryIndex = 1 # start populating after header
 
     for PubmedArticle in root.iter('PubmedArticle'):
-        PubmedArticleField = PubmedArticle.find('MedlineCitation')
-        #logging.debug("found PubmedArticle: {} (${})".format(self.name, self.price))
-        logging.debug("found PubmedArticle")
         EntryIndex = EntryIndex + 1
-        # for PubmedArticleField in PubmedArticle:
-        #     if PubmedArticleField.tag == 'MedlineCitation':
+
+        MedlineCitation = PubmedArticle.find('MedlineCitation')
         logging.debug('found MedlineCitation')
-        for SubField in PubmedArticleField:
-            if SubField.tag == 'PMID':
-                process_pmid(worksheet, SubField, EntryIndex)
-            if SubField.tag == 'Article':
-                process_article(worksheet, SubField, EntryIndex)
+        process_pmid(worksheet, MedlineCitation.find('PMID'), EntryIndex)
+        process_article(worksheet, MedlineCitation.find('Article'), EntryIndex)
 
 
     # Save the file
