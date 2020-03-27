@@ -5,6 +5,7 @@
 
 import xml.etree.ElementTree as ET
 import openpyxl as PYXL
+import openpyxl.styles as PYXL_S
 import logging
 
 ## -------------------------------------------------------------#
@@ -16,7 +17,11 @@ def init_worksheet():
 
     # grab the active worksheet
     worksheet = workbook.active
-
+    worksheet.page_setup.fitToHeight = 1
+    worksheet.column_dimensions['A'].width = 50
+    worksheet.column_dimensions['B'].width = 10
+    worksheet.column_dimensions['C'].width = 70
+    worksheet.column_dimensions['D'].width = 20
 
     worksheet['A1'] = 'ArticleTitle'   # ArticleTitle
     worksheet['B1'] = 'Author'         # Author
@@ -24,9 +29,6 @@ def init_worksheet():
     worksheet['D1'] = 'JournalTitle'   # Title
     worksheet['E1'] = 'PMID'           # PMID
     worksheet['F1'] = 'DOI'            # ELocationID
-
-
-
 
     return (workbook, worksheet)
 
@@ -50,20 +52,35 @@ def process_article(worksheet, Article, EntryIndex):
 
     try:
         Cell = 'D' + str(EntryIndex)
+        worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
+                                                   vertical='top',
+                                                   wrap_text=True,
+                                                   shrink_to_fit=False)
         worksheet[Cell] = Article.find('Journal').find('Title').text
     except AttributeError:
+        worksheet[Cell] = 'NA'
         logging.debug('did not find Journal.Title') 
 
     try:
         Cell = 'A' + str(EntryIndex)
+        worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
+                                                   vertical='top',
+                                                   wrap_text=True,
+                                                   shrink_to_fit=False)
         worksheet[Cell] = Article.find('ArticleTitle').text
     except AttributeError:
+        worksheet[Cell] = 'NA'
         logging.debug('did not find ArticleTitle')
 
     try:
         Cell = 'C' + str(EntryIndex)
+        worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
+                                                   vertical='top',
+                                                   wrap_text=True,
+                                                   shrink_to_fit=False)
         worksheet[Cell] = Article.find('Abstract').find('AbstractText').text
     except AttributeError:
+        worksheet[Cell] = 'NA'
         logging.debug('did not find AbstractText')
 
 #
@@ -71,6 +88,10 @@ def process_article(worksheet, Article, EntryIndex):
 #
 def process_pmid(worksheet, PMIDField, EntryIndex):
     Cell = 'E' + str(EntryIndex)
+    worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
+                                               vertical='top',
+                                               wrap_text=True,
+                                               shrink_to_fit=False)
     worksheet[Cell] = PMIDField.text
 
 #
@@ -95,9 +116,11 @@ def pm_xml2xlsx(infile, outfile, debug):
     root = tree.getroot()       # PubmedArticleSet
 
     EntryIndex = 1 # start populating after header
+    worksheet.row_dimensions[EntryIndex].height = 40
 
     for PubmedArticle in root.iter('PubmedArticle'):
         EntryIndex = EntryIndex + 1
+        worksheet.row_dimensions[EntryIndex].height = 40
 
         MedlineCitation = PubmedArticle.find('MedlineCitation')
         logging.debug('found MedlineCitation')
