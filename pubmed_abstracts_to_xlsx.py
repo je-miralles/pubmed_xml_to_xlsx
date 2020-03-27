@@ -17,11 +17,16 @@ def init_worksheet():
     # grab the active worksheet
     worksheet = workbook.active
 
-    worksheet['A1'] = 'PMID'           # PMID
-    worksheet['B1'] = 'DOI'            # ELocationID
-    worksheet['C1'] = 'JournalTitle'   # Title
-    worksheet['D1'] = 'ArticleTitle'   # ArticleTitle
-    worksheet['E1'] = 'Abstract'       # AbstractText
+
+    worksheet['A1'] = 'ArticleTitle'   # ArticleTitle
+    worksheet['B1'] = 'Author'         # Author
+    worksheet['C1'] = 'Abstract'       # AbstractText
+    worksheet['D1'] = 'JournalTitle'   # Title
+    worksheet['E1'] = 'PMID'           # PMID
+    worksheet['F1'] = 'DOI'            # ELocationID
+
+
+
 
     return (workbook, worksheet)
 
@@ -44,19 +49,19 @@ def process_article(worksheet, Article, EntryIndex):
     logging.debug('found Article')
 
     try:
-        Cell = 'C' + str(EntryIndex)
+        Cell = 'D' + str(EntryIndex)
         worksheet[Cell] = Article.find('Journal').find('Title').text
     except AttributeError:
         logging.debug('did not find Journal.Title') 
 
     try:
-        Cell = 'D' + str(EntryIndex)
+        Cell = 'A' + str(EntryIndex)
         worksheet[Cell] = Article.find('ArticleTitle').text
     except AttributeError:
         logging.debug('did not find ArticleTitle')
 
     try:
-        Cell = 'E' + str(EntryIndex)
+        Cell = 'C' + str(EntryIndex)
         worksheet[Cell] = Article.find('Abstract').find('AbstractText').text
     except AttributeError:
         logging.debug('did not find AbstractText')
@@ -65,7 +70,7 @@ def process_article(worksheet, Article, EntryIndex):
 # process pmid fields 
 #
 def process_pmid(worksheet, PMIDField, EntryIndex):
-    Cell = 'A' + str(EntryIndex)
+    Cell = 'E' + str(EntryIndex)
     worksheet[Cell] = PMIDField.text
 
 #
