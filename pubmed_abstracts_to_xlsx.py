@@ -15,8 +15,8 @@ import logging
 def init_worksheet():
     workbook = PYXL.Workbook()
 
-    # grab the active worksheet
     worksheet = workbook.active
+
     worksheet.page_setup.fitToHeight = 1
     worksheet.column_dimensions['A'].width = 50
     worksheet.column_dimensions['B'].width = 15
@@ -29,7 +29,6 @@ def init_worksheet():
     worksheet['C1'] = 'Abstract'       # AbstractText
     worksheet['D1'] = 'JournalTitle'   # Title
     worksheet['E1'] = 'PMID'           # PMID
-    worksheet['F1'] = 'DOI'            # ELocationID
 
     return (workbook, worksheet)
 
