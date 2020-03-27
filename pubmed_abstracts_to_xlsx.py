@@ -53,10 +53,14 @@ def process_article(worksheet, Article, EntryIndex):
     try:
         Cell = 'D' + str(EntryIndex)
         worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
-                                                   vertical='top',
-                                                   wrap_text=True,
-                                                   shrink_to_fit=False)
-        worksheet[Cell] = Article.find('Journal').find('Title').text
+                                                     vertical='top',
+                                                     wrap_text=True,
+                                                     shrink_to_fit=False)
+        worksheet[Cell] = "{}, {}, {} {} ".format(
+            Article.find('Journal').find('Title').text,
+            Article.find('Journal').find('JournalIssue').find('PubDate').find('Year').text,
+            Article.find('Journal').find('JournalIssue').find('PubDate').find('Month').text,
+            Article.find('Journal').find('JournalIssue').find('PubDate').find('Day').text)
     except AttributeError:
         worksheet[Cell] = 'NA'
         logging.debug('did not find Journal.Title') 
@@ -64,9 +68,9 @@ def process_article(worksheet, Article, EntryIndex):
     try:
         Cell = 'A' + str(EntryIndex)
         worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
-                                                   vertical='top',
-                                                   wrap_text=True,
-                                                   shrink_to_fit=False)
+                                                     vertical='top',
+                                                     wrap_text=True,
+                                                     shrink_to_fit=False)
         worksheet[Cell] = Article.find('ArticleTitle').text
     except AttributeError:
         worksheet[Cell] = 'NA'
@@ -75,9 +79,9 @@ def process_article(worksheet, Article, EntryIndex):
     try:
         Cell = 'B' + str(EntryIndex)
         worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
-                                                   vertical='top',
-                                                   wrap_text=True,
-                                                   shrink_to_fit=False)
+                                                     vertical='top',
+                                                     wrap_text=True,
+                                                     shrink_to_fit=False)
         worksheet[Cell] = Article.find('AuthorList').find('Author').find('LastName').text
     except AttributeError:
         worksheet[Cell] = 'NA'
@@ -86,9 +90,9 @@ def process_article(worksheet, Article, EntryIndex):
     try:
         Cell = 'C' + str(EntryIndex)
         worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
-                                                   vertical='top',
-                                                   wrap_text=True,
-                                                   shrink_to_fit=False)
+                                                     vertical='top',
+                                                     wrap_text=True,
+                                                     shrink_to_fit=False)
         worksheet[Cell] = Article.find('Abstract').find('AbstractText').text
     except AttributeError:
         worksheet[Cell] = 'NA'
@@ -100,9 +104,9 @@ def process_article(worksheet, Article, EntryIndex):
 def process_pmid(worksheet, PMIDField, EntryIndex):
     Cell = 'E' + str(EntryIndex)
     worksheet[Cell].alignment = PYXL_S.Alignment(horizontal='left',
-                                               vertical='top',
-                                               wrap_text=True,
-                                               shrink_to_fit=False)
+                                                 vertical='top',
+                                                 wrap_text=True,
+                                                 shrink_to_fit=False)
     worksheet[Cell] = PMIDField.text
 
 #
