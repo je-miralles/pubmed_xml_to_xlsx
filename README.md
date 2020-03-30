@@ -1,4 +1,4 @@
-pm_xml2xlsx
+pubmed_xml_to_xlsx
 
 PubMed XML to XLSX converter
 

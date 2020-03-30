@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 setup(
-    name="pm_xml2xlsx",
+    name="pubmed_xml_to_xlsx",
     version="0.1",
     packages=find_packages(),
     # metadata to display on PyPI
