@@ -6,4 +6,5 @@ setup(
     # metadata to display on PyPI
     author="Juan Emilio Miralles",
     author_email="jemiralle@gmail.com",
+    url="https://github.com/je-miralles/pubmed_xml_to_xlsx",
 )
