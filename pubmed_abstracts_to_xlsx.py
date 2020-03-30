@@ -1,3 +1,6 @@
+
+## -------------------------------------------------------------#
+#
 # pubmed_abstracts_to_xlsx
 #
 #  Take the pubmed_result.txt file containing a dump of abstracts from a pubmed
@@ -33,17 +36,6 @@ def init_worksheet():
     return (workbook, worksheet)
 
 ## -------------------------------------------------------------#
-
-#TODO :
-#
-# Replace this construction:
-#        if ArticleField.tag == 'Abstract':
-#              for elemAbstract in ArticleField:
-#                  if elemAbstract.tag == 'AbstractText':
-#                      Cell = 'E' + str(EntryIndex)
-#                      worksheet[Cell] = elemAbstract.text
-# with some relevant built-in search method.
-
 #
 # process article fields 
 #
@@ -116,11 +108,6 @@ def process_pmid(worksheet, PMIDField, EntryIndex):
                                                  shrink_to_fit=False)
     worksheet[Cell] = PMIDField.text
 
-#
-#logging.debug("found PubmedArticle: {} (${})".format(self.name, self.price))
-#logging.debug(ArticleField.tag)
-#
-
 ## -------------------------------------------------------------#
 #
 # main program
@@ -150,7 +137,6 @@ def pm_xml2xlsx(infile, outfile, debug):
         process_article(worksheet, MedlineCitation.find('Article'), EntryIndex)
 
 
-    # Save the file
     workbook.save(pathToXLSX)
 
 if __name__ == '__main__':
