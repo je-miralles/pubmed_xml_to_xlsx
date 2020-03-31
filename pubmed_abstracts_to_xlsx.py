@@ -49,7 +49,7 @@ def process_article(worksheet, Article, EntryIndex):
                                                      wrap_text=True,
                                                      shrink_to_fit=False)
         JournalString = Article.find('Journal').find('Title').text
-        JournalString = JournalString + ", {}".format(
+        JournalString = JournalString + ", Vol {}".format(
             Article.find('Journal').find('JournalIssue').find('Volume').text)
         JournalString = JournalString + ", {}".format(
             Article.find('Journal').find('JournalIssue').find('PubDate').find('Year').text)
