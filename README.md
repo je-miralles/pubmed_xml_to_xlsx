@@ -4,6 +4,8 @@ pubmed_xml_to_xlsx - A simple tool to process a PubMed query XML file and store 
 
 ## Getting Started
 
+`python pubmed_xml_to_xlsx <input_file>.xml <output_file>.xlsx`
+
 ## Authors
 
 * **Juan Emilio Miralles** - *Initial work* - [je-miralles](https://github.com/je-miralles)
